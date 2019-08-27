@@ -1,0 +1,12 @@
+@import "~@microsoft/sp-office-ui-fabric-core/dist/sass/ThemeOverrides.scss";
+
+.documentLibrary {
+  display: block;
+  .nav {
+    border-bottom: solid 2px transparent;
+  }
+  .activeNav {
+    border-bottom: solid 2px $ms-color-themePrimary;
+    background-color: $ms-color-white;
+  }
+}
