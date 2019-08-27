@@ -80,7 +80,11 @@ class DocumentLibrary extends React.Component<IDocumentLibraryProps, IDocumentLi
           onSelect={this.props.onSelect}
         />;
       case Pages.url:
-        return <URL />;
+        return <URL
+        onSelect={this.props.onSelect}
+        fileType={this.props.fileType}
+        extensions={this.props.extensions}
+        />;
       case Pages.upload:
         return <Upload />;
 

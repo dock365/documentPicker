@@ -1,1 +1,4 @@
-export interface IURLState {}
+export interface IURLState {
+  value: string;
+  errorMessage: string;
+}
