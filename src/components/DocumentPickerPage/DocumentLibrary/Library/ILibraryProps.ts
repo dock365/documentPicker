@@ -10,4 +10,6 @@ export interface ILibraryProps {
   selectionMode?: SelectionMode;
   uploadDocument?: (file: File, relativeUrl: string) => Promise<IDocument>;
   onSelect: (value: string) => void;
+  includeFolders?: boolean;
+  selectedValue?: string;
 }

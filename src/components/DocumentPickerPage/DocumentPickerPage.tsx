@@ -28,8 +28,7 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
   constructor(props) {
     super(props);
     this.state = {
-      showPanel: false,
-      selected: "",
+      selected: this.props.value || "",
       page: Pages.library,
     };
 
@@ -41,13 +40,18 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
     this._onCommandBarItemClick = this._onCommandBarItemClick.bind(this);
   }
 
+  public componentDidUpdate(prevProps: IDocumentPickerPageProps) {
+    if (this.props.value !== prevProps.value) {
+      this.setState({ selected: this.props.value });
+    }
+  }
+
   public render(): JSX.Element {
     return (
       <div >
-        <ActionButton text="Select" onClick={() => this.setState({ showPanel: true })} />
         <Panel
-          isOpen={this.state.showPanel}
-          onDismiss={() => this.setState({ showPanel: false })}
+          isOpen={this.props.isOpen}
+          onDismiss={this._onClose}
           type={PanelType.large}
           onRenderFooterContent={this._onRenderFooterContent}
           onRenderHeader={this._onRenderHeaderContent}
@@ -59,6 +63,8 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
             rootUrl={this.props.rootUrl}
             extensions={this.props.extensions}
             fileType={this.props.fileType}
+            includeFolders={this.props.includeFolders}
+            selectedValue={this.props.value}
           />
         </Panel>
       </div>
@@ -92,25 +98,28 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
           farItems={this.getFarItems()}
         />
       </React.Fragment>
-    )
+    );
   }
 
   private _onSelect(value: string) {
     this.setState({ selected: value });
-    console.log(value);
   }
 
   private _onSave(e: React.MouseEvent<HTMLButtonElement>) {
-    debugger
-    this.setState({ showPanel: false });
+    this._onClose();
+    this.props.onSelect(this.state.selected);
   }
 
   private _onClose() {
-    this.setState({ showPanel: false });
+    this.setState({
+      selected: "",
+      page: Pages.library,
+    });
+    this.props.onDismiss();
   }
 
   private getItems(): ICommandBarItemProps[] {
-    return [
+    const items = [
       {
         key: Pages.library,
         name: 'Library',
@@ -120,7 +129,9 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
         className: this.state.page === Pages.library ? classNames.activeNav : classNames.navItem,
         onClick: this._onCommandBarItemClick
       },
-      {
+    ];
+    if (this.props.allowCustomUrl) {
+      items.push({
         key: Pages.url,
         name: 'Custom URL',
         iconProps: {
@@ -128,8 +139,9 @@ class DocumentPickerPage extends React.Component<IDocumentPickerPageProps, IDocu
         },
         className: this.state.page === Pages.url ? classNames.activeNav : classNames.navItem,
         onClick: this._onCommandBarItemClick
-      },
-    ];
+      });
+    }
+    return items;
   }
 
 

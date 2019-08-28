@@ -6,4 +6,6 @@ export interface IDocumentLibraryProps {
   rootUrl: string;
   extensions?: string[];
   fileType?: FileTypes;
+  includeFolders?: boolean;
+  selectedValue?: string;
 }

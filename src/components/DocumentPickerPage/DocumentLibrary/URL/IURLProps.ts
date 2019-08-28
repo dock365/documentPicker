@@ -4,4 +4,5 @@ export interface IURLProps {
   extensions?: string[];
   fileType?: FileTypes;
   onSelect: (value: string) => void;
+  selectedValue?: string;
 }

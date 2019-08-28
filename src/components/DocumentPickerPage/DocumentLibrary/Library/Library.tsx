@@ -224,19 +224,29 @@ class Library extends React.Component<ILibraryProps, ILibraryState> {
           allItems: documents,
         }));
       });
-
-    this.props.getFolders()
-      .then((folders) => {
-        this.setState(prevState => ({
-          items: [...folders, ...prevState.items],
-          allFolders: folders,
-        }));
-      });
+    if (this.props.includeFolders) {
+      this.props.getFolders()
+        .then((folders) => {
+          this.setState(prevState => ({
+            items: [...folders, ...prevState.items],
+            allFolders: folders,
+          }));
+        });
+    }
   }
 
-  public componentDidUpdate(previousProps: any, previousState: ILibraryState) {
+  public componentDidUpdate(previousProps: ILibraryProps, previousState: ILibraryState) {
     if (previousState.isModalSelection !== this.state.isModalSelection && !this.state.isModalSelection) {
       this._selection.setAllSelected(false);
+    }
+    if (
+      this.props.selectedValue &&
+      (
+        previousState.allItems !== this.state.allItems ||
+        this.props.selectedValue !== previousProps.selectedValue
+      )
+    ) {
+      this._selection.setKeySelected(this.props.selectedValue, true, false);
     }
   }
 
@@ -356,7 +366,7 @@ class Library extends React.Component<ILibraryProps, ILibraryState> {
     if (item.fileType === "folder") {
       this.setState({ loading: true });
       const documents = await this.props.getDocuments(item.serverRelativeUrl);
-      const folders = await this.props.getFolders(item.serverRelativeUrl);
+      const folders = this.props.includeFolders ? await this.props.getFolders(item.serverRelativeUrl) : [];
       this.setState(prevState => ({
         items: [...folders, ...documents],
         allFolders: folders,

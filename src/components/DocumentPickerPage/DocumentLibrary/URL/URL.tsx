@@ -9,7 +9,7 @@ class URL extends React.Component<IURLProps, IURLState> {
   constructor(props) {
     super(props);
     this.state = {
-      value: "",
+      value: this.props.selectedValue,
       errorMessage: "",
     };
 
@@ -17,11 +17,18 @@ class URL extends React.Component<IURLProps, IURLState> {
     this._onBlur = this._onBlur.bind(this);
   }
 
+  public componentDidUpdate(prevProps: IURLProps) {
+    if (this.props.selectedValue !== prevProps.selectedValue) {
+      this.setState({ value: this.props.selectedValue || "" });
+    }
+  }
+
   public render(): JSX.Element {
     return (
       <div style={{ marginTop: "15px" }}>
         <TextField
           label="Enter Custom URL"
+          value={this.state.value}
           onChange={this._onChange}
           onBlur={this._onBlur}
           errorMessage={this.state.errorMessage}

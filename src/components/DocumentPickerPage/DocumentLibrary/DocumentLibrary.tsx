@@ -78,12 +78,15 @@ class DocumentLibrary extends React.Component<IDocumentLibraryProps, IDocumentLi
           uploadDocument={this._uploadDocument}
           rootUrl={this.props.rootUrl}
           onSelect={this.props.onSelect}
+          includeFolders={this.props.includeFolders}
+          selectedValue={this.props.selectedValue}
         />;
       case Pages.url:
         return <URL
-        onSelect={this.props.onSelect}
-        fileType={this.props.fileType}
-        extensions={this.props.extensions}
+          onSelect={this.props.onSelect}
+          fileType={this.props.fileType}
+          extensions={this.props.extensions}
+          selectedValue={this.props.selectedValue}
         />;
       case Pages.upload:
         return <Upload />;
@@ -108,7 +111,7 @@ class DocumentLibrary extends React.Component<IDocumentLibraryProps, IDocumentLi
         let fileType = file.ServerRelativeUrl.slice(file.ServerRelativeUrl.lastIndexOf(".") + 1);
         fileType = fileType && fileType.toLowerCase();
         return {
-          key: file.UniqueId,
+          key: file.ServerRelativeUrl,
           name: file.Name,
           value: file.Name,
           // iconName: string,
@@ -140,7 +143,7 @@ class DocumentLibrary extends React.Component<IDocumentLibraryProps, IDocumentLi
       .get();
     const documents: IDocument[] = files.map(file => {
       return {
-        key: file.UniqueId,
+        key: file.ServerRelativeUrl,
         name: file.Name,
         value: file.Name,
         // iconName: string,
