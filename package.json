@@ -1,6 +1,6 @@
 {
   "name": "@dock365/documentpicker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Document picker for sharepoint with fabric ui",
   "main": "dist/index.js",
   "scripts": {
